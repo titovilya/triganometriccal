@@ -300,8 +300,14 @@ def seperate_digit_left_part(seperate_first):
             left_list_digit_first = int(seperate_first_left_digit[:index_of_slash1-1])
         except ValueError:
             left_list_digit_first = 0
-        left_list_digit_second = int(seperate_first_left_digit[index_of_slash1+1:])
-        left_list_digit = [left_list_digit_first] + [multiplicator1] + [left_list_digit_second]
+        try:
+            left_list_digit_second = int(seperate_first_left_digit[index_of_slash1+1:])
+        except ValueError:
+            left_list_digit_second = 0
+        try:
+            left_list_digit = [left_list_digit_first] + [multiplicator1] + [left_list_digit_second]
+        except ValueError:
+            left_list_digit = 0
     else:
         if len(seperate_first_left_digit) > 1:
             left_list_digit_first = int(seperate_first_left_digit[:-1])
@@ -317,8 +323,14 @@ def seperate_digit_left_part(seperate_first):
             right_list_digit_first = int(seperate_first_right_digit[:index_of_slash2-1])
         except ValueError:
             right_list_digit_first = 0
-        right_list_digit_second = int(seperate_first_right_digit[index_of_slash2+1:])
-        right_list_digit = [right_list_digit_first] + [multiplicator2] + [right_list_digit_second]
+        try:
+            right_list_digit_second = int(seperate_first_right_digit[index_of_slash2+1:])
+        except ValueError:
+            right_list_digit_second = 0
+        try:
+            right_list_digit = [right_list_digit_first] + [multiplicator2] + [right_list_digit_second]
+        except ValueError:
+            right_list_digit = 0
     else:
         if len(seperate_first_right_digit) > 1:
             right_list_digit_first = int(seperate_first_right_digit[:-1])
@@ -902,29 +914,31 @@ while True:
             input_program = str(input('Think how do u want to start. If u want to use file type "file". Else you want write type "write": '))
             if input_program.lower() == 'file':
                 outputfile = open('Outputfile.txt', 'w', encoding = 'utf8')
-                with open('Examples.txt' , 'r', encoding = 'utf8') as filename:
-                    for line in filename:
-                        input_string = str(line.strip())
-                        list_main = main_separation(input_string) #entered begin to share
-                        if list_main:
-                            first_word_main = list_main[0] #left part
-                            second_word_main = list_main[-1] #right part
-                            bool_true_left = conditional_check_left(first_word_main) #check the left side for input
-                            bool_true_right = conditional_check_right(second_word_main) #check the right side for input
-                            if bool_true_left and bool_true_right:
-                                answer_x = solve_main(first_word_main, second_word_main) #solve these parts
-                                if len(answer_x[1]) > 0: #if an answer has only 1 line
-                                    the_main_answer = str(answer_x[0]) + '  or  ' + str(answer_x[1])
-                                else: #if an answer has 2 lines
-                                    the_main_answer = str(answer_x[0])
-                            else:
-                                the_main_answer = 'You have entered impossible arguments.'
-                        outputfile.write('Equation: ' + str(input_string) + '\n')
-                        outputfile.write('Solution: ' + '  left part: '+ str(first_word_main) + ' ||| right part: '+ str(second_word_main) + '\n')
-                        outputfile.write('Answer: ' + str(the_main_answer) + '\n')
-                        outputfile.write('\n')
-
-                print('File was created. Check ur folder.')
+                try:
+                    with open('Examples.txt' , 'r', encoding = 'utf8') as filename:
+                        for line in filename:
+                            input_string = str(line.strip())
+                            list_main = main_separation(input_string) #entered begin to share
+                            if list_main:
+                                first_word_main = list_main[0] #left part
+                                second_word_main = list_main[-1] #right part
+                                bool_true_left = conditional_check_left(first_word_main) #check the left side for input
+                                bool_true_right = conditional_check_right(second_word_main) #check the right side for input
+                                if bool_true_left and bool_true_right:
+                                    answer_x = solve_main(first_word_main, second_word_main) #solve these parts
+                                    if len(answer_x[1]) > 0: #if an answer has only 1 line
+                                        the_main_answer = str(answer_x[0]) + '  or  ' + str(answer_x[1])
+                                    else: #if an answer has 2 lines
+                                        the_main_answer = str(answer_x[0])
+                                else:
+                                    the_main_answer = 'You have entered impossible arguments.'
+                            outputfile.write('Equation: ' + str(input_string) + '\n')
+                            outputfile.write('Solution: ' + '  left part: '+ str(first_word_main) + ' ||| right part: '+ str(second_word_main) + '\n')
+                            outputfile.write('Answer: ' + str(the_main_answer) + '\n')
+                            outputfile.write('\n')
+                        print('File was created. Check ur folder.')
+                except FileNotFoundError as err:
+                    print('File not found. Check ur directory.')
                 outputfile.close()
         #------------------------------if user type write-----------------------------
             elif input_program.lower() == 'write':
@@ -960,4 +974,3 @@ while True:
         break
     else:
         continue
-    
